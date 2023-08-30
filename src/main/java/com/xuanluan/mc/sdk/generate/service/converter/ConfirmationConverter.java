@@ -1,8 +1,8 @@
-package org.xuanluan.mc.generate.service.converter;
+package com.xuanluan.mc.sdk.generate.service.converter;
 
-import org.xuanluan.mc.generate.domain.dto.ConfirmationObjectDTO;
-import org.xuanluan.mc.generate.domain.entity.ConfirmationObject;
-import org.xuanluan.mc.generate.domain.enums.PeriodTime;
+import com.xuanluan.mc.sdk.generate.domain.enums.PeriodTime;
+import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
+import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
 
 import java.util.Date;
 

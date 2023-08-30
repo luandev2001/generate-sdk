@@ -1,4 +1,4 @@
-package org.xuanluan.mc.generate.domain.enums;
+package com.xuanluan.mc.sdk.generate.domain.enums;
 
 public enum PeriodTime {
     second, minute, hour, day;

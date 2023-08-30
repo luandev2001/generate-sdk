@@ -1,7 +1,7 @@
-package org.xuanluan.mc.generate.service;
+package com.xuanluan.mc.sdk.generate.service;
 
-import org.xuanluan.mc.generate.domain.dto.ConfirmationObjectDTO;
-import org.xuanluan.mc.generate.domain.entity.ConfirmationObject;
+import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
+import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
 
 public interface ConfirmationObjectService {
     <T> ConfirmationObject create(ConfirmationObjectDTO<T> dto, String byUser);

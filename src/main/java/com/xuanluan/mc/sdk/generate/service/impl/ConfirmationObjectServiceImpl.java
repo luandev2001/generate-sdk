@@ -1,14 +1,15 @@
-package org.xuanluan.mc.generate.service.impl;
+package com.xuanluan.mc.sdk.generate.service.impl;
 
+import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectRepository;
 import com.xuanluan.mc.sdk.utils.AssertUtils;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.xuanluan.mc.generate.domain.dto.ConfirmationObjectDTO;
-import org.xuanluan.mc.generate.domain.entity.ConfirmationObject;
-import org.xuanluan.mc.generate.repository.confirm.ConfirmationObjectRepository;
-import org.xuanluan.mc.generate.service.ConfirmationObjectService;
-import org.xuanluan.mc.generate.service.converter.ConfirmationConverter;
+import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
+import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
+import com.xuanluan.mc.sdk.generate.service.ConfirmationObjectService;
+import com.xuanluan.mc.sdk.generate.service.converter.ConfirmationConverter;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 public class ConfirmationObjectServiceImpl implements ConfirmationObjectService {
     private final ConfirmationObjectRepository confirmationObjectRepository;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public <T> ConfirmationObject create(ConfirmationObjectDTO<T> dto, String byUser) {
         AssertUtils.notNull(dto, "request");
@@ -39,6 +41,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
         return checkConfirmationObject(object, objectId) != null;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public <T> ConfirmationObject resetWhenExpired(ConfirmationObjectDTO<T> dto, String byUser) {
         AssertUtils.notNull(dto, "request");
