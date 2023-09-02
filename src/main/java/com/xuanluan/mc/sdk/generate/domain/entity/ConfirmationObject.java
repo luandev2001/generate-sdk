@@ -20,4 +20,6 @@ public class ConfirmationObject extends BaseEntity {
     private String token;
     @Column(nullable = false, updatable = false)
     private Date expiredAt;
+    @Column(nullable = false, updatable = false, length = 20)
+    private String type;
 }

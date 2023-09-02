@@ -13,4 +13,5 @@ public class ConfirmationObjectDTO<T> {
     private String objectId;
     private long expiredNum;
     private PeriodTime period;
+    private String type;
 }

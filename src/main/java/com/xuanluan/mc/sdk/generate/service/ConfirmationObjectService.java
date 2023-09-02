@@ -8,7 +8,9 @@ public interface ConfirmationObjectService {
 
     <T> ConfirmationObject getLast(Class<T> object, String objectId);
 
-    <T> boolean isExpired(Class<T> object, String objectId);
+    <T> ConfirmationObject getLast(Class<T> object, String objectId, String type);
+
+    <T> void validate(Class<T> object, String objectId, String type, String code);
 
     <T> ConfirmationObject resetWhenExpired(ConfirmationObjectDTO<T> dto, String byUser);
 }

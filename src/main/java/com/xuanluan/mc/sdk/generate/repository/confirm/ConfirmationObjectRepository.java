@@ -7,8 +7,9 @@ import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
 
 @Repository
 public interface ConfirmationObjectRepository extends CrudRepository<ConfirmationObject, String> {
-    @Query("select co from ConfirmationObject co where co.object= :object and :objectId " +
+    @Query("select co from ConfirmationObject co " +
+            "where co.object=:object and co.objectId=:objectId and co.type=:type " +
             "order by co.createdAt desc " +
             "limit 1")
-    ConfirmationObject getLast(String object, String objectId);
+    ConfirmationObject getLast(String object, String objectId, String type);
 }

@@ -11,6 +11,7 @@ public class ConfirmationConverter {
         object.setObjectId(dto.getObjectId());
         object.setObject(dto.getObject().getSimpleName());
         object.setExpiredAt(new Date(object.getExpiredAt().getTime() + PeriodTime.convert(dto.getExpiredNum(), dto.getPeriod())));
+        object.setType(dto.getType() != null ? dto.getType() : object.getObject());
         return object;
     }
 }
