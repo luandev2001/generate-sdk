@@ -14,4 +14,5 @@ public class ConfirmationObjectDTO<T> {
     private long expiredNum;
     private PeriodTime period;
     private String type;
+    private int lengthDigit = 5;
 }

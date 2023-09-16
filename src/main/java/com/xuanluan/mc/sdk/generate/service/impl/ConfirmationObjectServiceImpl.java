@@ -30,7 +30,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
         AssertUtils.notNull(dto, "request");
         AssertUtils.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
         ConfirmationObject confirmationObject = ConfirmationConverter.toConfirmationObject(new ConfirmationObject(), dto);
-        confirmationObject.setToken(GeneratorUtils.getRandomCode4Digits());
+        confirmationObject.setToken(GeneratorUtils.generateCodeDigits(dto.getLengthDigit()));
         AssertUtils.notBlank(confirmationObject.getObjectId(), "objectId");
         AssertUtils.notBlank(confirmationObject.getObject(), "object");
         AssertUtils.notBlank(confirmationObject.getToken(), "token");
