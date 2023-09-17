@@ -15,6 +15,14 @@ public class KeyPairUtils {
 
     }
 
+    public static String encodeBase64(byte[] value) {
+        return Base64.getEncoder().encodeToString(value);
+    }
+
+    public static byte[] decodeBase64(String value) {
+        return Base64.getDecoder().decode(value);
+    }
+
     public static PrivateKey privateKey(String value) {
         return processPrivateKey(Base64.getDecoder().decode(value), "RSA");
     }
