@@ -2,6 +2,7 @@ package com.xuanluan.mc.sdk.generate.repository.confirm;
 
 import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
 import com.xuanluan.mc.sdk.repository.BaseRepository;
+import org.springframework.data.domain.Sort;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.Predicate;
@@ -19,6 +20,6 @@ public class ConfirmationObjectRepositoryCustomImpl extends BaseRepository<Confi
         List<Predicate> predicates = appendFilter("object", object, new LinkedList<>());
         appendFilter("objectId", objectId, predicates);
         appendFilter("type", type, predicates);
-        return getSingleResult(predicates);
+        return getSingleResult(predicates, Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 }
