@@ -11,7 +11,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>org.xuanluan.mc</groupId>
+    <groupId>com.xuanluan.mc</groupId>
     <artifactId>generate-sdk</artifactId>
     <version>1.1.0</version>
 
