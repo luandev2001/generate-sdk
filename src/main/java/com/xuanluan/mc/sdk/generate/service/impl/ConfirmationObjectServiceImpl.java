@@ -2,9 +2,9 @@ package com.xuanluan.mc.sdk.generate.service.impl;
 
 import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectRepository;
 import com.xuanluan.mc.sdk.utils.AssertUtils;
-import com.xuanluan.mc.sdk.utils.BaseStringUtils;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
 import com.xuanluan.mc.sdk.utils.MessageUtils;
+import com.xuanluan.mc.sdk.utils.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
@@ -53,7 +53,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
     @Override
     public <T> void validate(Class<T> object, String objectId, String type, String code) {
         ConfirmationObject confirmationObject = checkConfirmationObject(object, objectId, type);
-        AssertUtils.isTrue(confirmationObject != null && confirmationObject.getToken().equals(code), "confirmation.error.invalid", null);
+        AssertUtils.isTrue(confirmationObject != null && confirmationObject.getToken().equals(code), "confirmation.error.invalid", "");
         AssertUtils.isTrue(confirmationObject.getExpiredAt().after(new Date()), "confirmation.error.expired", HttpStatus.REQUEST_TIMEOUT);
     }
 
@@ -66,7 +66,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
     }
 
     private <T> ConfirmationObject checkConfirmationObject(Class<T> object, String objectId, String type) {
-        type = BaseStringUtils.hasTextAfterTrim(type) ? type : object.getSimpleName();
+        type = StringUtils.hasTextAfterTrim(type) ? type : object.getSimpleName();
         ConfirmationObject confirmationObject = getLast(object, objectId, type);
         boolean flag = confirmationObject == null || confirmationObject.getExpiredAt().before(new Date());
         return flag ? null : confirmationObject;
