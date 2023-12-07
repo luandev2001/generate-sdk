@@ -4,7 +4,6 @@ import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectReposit
 import com.xuanluan.mc.sdk.utils.AssertUtils;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
 import com.xuanluan.mc.sdk.utils.MessageUtils;
-import com.xuanluan.mc.sdk.utils.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
@@ -32,17 +31,12 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
         ConfirmationObject confirmationObject = ConfirmationConverter.toConfirmationObject(new ConfirmationObject(), dto);
         confirmationObject.setToken(GeneratorUtils.generateCodeDigits(dto.getLengthDigit()));
         confirmationObject.setCreatedBy(byUser);
-        AssertUtils.notBlank(confirmationObject.getObjectId(), "objectId");
+        AssertUtils.notBlank(confirmationObject.getObjectId(), "object_id");
         AssertUtils.notBlank(confirmationObject.getObject(), "object");
         AssertUtils.notBlank(confirmationObject.getToken(), "token");
         AssertUtils.notBlank(confirmationObject.getType(), "type");
         AssertUtils.notNull(confirmationObject.getExpiredAt(), "expiredAt");
         return confirmationObjectRepository.save(confirmationObject);
-    }
-
-    @Override
-    public <T> ConfirmationObject getLast(Class<T> object, String objectId) {
-        return getLast(object, objectId, object.getSimpleName());
     }
 
     @Override
@@ -52,24 +46,9 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
 
     @Override
     public <T> void validate(Class<T> object, String objectId, String type, String code) {
-        ConfirmationObject confirmationObject = checkConfirmationObject(object, objectId, type);
+        ConfirmationObject confirmationObject = getLast(object, objectId, type);
         AssertUtils.isTrue(confirmationObject != null && confirmationObject.getToken().equals(code), "confirmation.error.invalid", "");
         AssertUtils.isTrue(confirmationObject.getExpiredAt().after(new Date()), "confirmation.error.expired", HttpStatus.REQUEST_TIMEOUT);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public <T> ConfirmationObject resetWhenExpired(ConfirmationObjectDTO<T> dto, String byUser) {
-        AssertUtils.notNull(dto, "request");
-        ConfirmationObject result = checkConfirmationObject(dto.getObject(), dto.getObjectId(), dto.getType());
-        return result != null ? result : create(dto, byUser);
-    }
-
-    private <T> ConfirmationObject checkConfirmationObject(Class<T> object, String objectId, String type) {
-        type = StringUtils.hasTextAfterTrim(type) ? type : object.getSimpleName();
-        ConfirmationObject confirmationObject = getLast(object, objectId, type);
-        boolean flag = confirmationObject == null || confirmationObject.getExpiredAt().before(new Date());
-        return flag ? null : confirmationObject;
     }
 
     private static class ConfirmationMessage extends MessageUtils {
