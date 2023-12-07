@@ -46,9 +46,10 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
 
     @Override
     public <T> void validate(Class<T> object, String objectId, String type, String code) {
+        Date currentDate = new Date();
         ConfirmationObject confirmationObject = getLast(object, objectId, type);
         AssertUtils.isTrue(confirmationObject != null && confirmationObject.getToken().equals(code), "confirmation.error.invalid", "");
-        AssertUtils.isTrue(confirmationObject.getExpiredAt().after(new Date()), "confirmation.error.expired", HttpStatus.REQUEST_TIMEOUT);
+        AssertUtils.isTrue(confirmationObject.getExpiredAt().after(currentDate), "confirmation.error.expired", HttpStatus.REQUEST_TIMEOUT);
     }
 
     private static class ConfirmationMessage extends MessageUtils {
