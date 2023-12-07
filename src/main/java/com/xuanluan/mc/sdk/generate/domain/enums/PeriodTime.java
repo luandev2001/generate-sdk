@@ -7,10 +7,13 @@ public enum PeriodTime {
         switch (period) {
             case minute:
                 time *= 60;
+                break;
             case hour:
                 time *= 3600;
+                break;
             case day:
                 time *= 3600 * 24;
+                break;
         }
         return time;
     }
