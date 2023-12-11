@@ -1,6 +1,6 @@
 package com.xuanluan.mc.sdk.generate.domain.entity;
 
-import com.xuanluan.mc.sdk.domain.entity.BaseEntity;
+import com.xuanluan.mc.sdk.domain.entity.PersistenceEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +11,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-public class ConfirmationObject extends BaseEntity {
+public class ConfirmationObject extends PersistenceEntity {
     @Column(nullable = false, updatable = false)
     private String object;
     @Column(nullable = false, updatable = false)
