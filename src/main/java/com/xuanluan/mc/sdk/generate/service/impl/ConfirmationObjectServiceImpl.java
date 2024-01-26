@@ -27,18 +27,18 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public <T> ConfirmationObject create(ConfirmationObjectDTO<T> dto, String byUser) {
+    public <T> String create(ConfirmationObjectDTO<T> dto, String byUser) {
         AssertUtils.notNull(dto, "request");
         AssertUtils.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
+        AssertUtils.notBlank(dto.getObjectId(), "object_id");
+        AssertUtils.notBlank(dto.getType(), "type");
+
+        String token = GeneratorUtils.generateCodeDigits(dto.getLengthDigit());
         ConfirmationObject confirmationObject = ConfirmationConverter.toConfirmationObject(new ConfirmationObject(), dto);
-        confirmationObject.setToken(convertToMd5(GeneratorUtils.generateCodeDigits(dto.getLengthDigit())));
+        confirmationObject.setToken(convertToMd5(token));
         confirmationObject.setCreatedBy(byUser);
-        AssertUtils.notBlank(confirmationObject.getObjectId(), "object_id");
-        AssertUtils.notBlank(confirmationObject.getObject(), "object");
-        AssertUtils.notBlank(confirmationObject.getToken(), "token");
-        AssertUtils.notBlank(confirmationObject.getType(), "type");
-        AssertUtils.notNull(confirmationObject.getExpiredAt(), "expiredAt");
-        return confirmationObjectRepository.save(confirmationObject);
+        confirmationObjectRepository.save(confirmationObject);
+        return token;
     }
 
     @Override
