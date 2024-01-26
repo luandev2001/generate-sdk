@@ -11,7 +11,9 @@ import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
 import com.xuanluan.mc.sdk.generate.service.ConfirmationObjectService;
 import com.xuanluan.mc.sdk.generate.service.converter.ConfirmationConverter;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
@@ -29,7 +31,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
         AssertUtils.notNull(dto, "request");
         AssertUtils.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
         ConfirmationObject confirmationObject = ConfirmationConverter.toConfirmationObject(new ConfirmationObject(), dto);
-        confirmationObject.setToken(GeneratorUtils.generateCodeDigits(dto.getLengthDigit()));
+        confirmationObject.setToken(convertToMd5(GeneratorUtils.generateCodeDigits(dto.getLengthDigit())));
         confirmationObject.setCreatedBy(byUser);
         AssertUtils.notBlank(confirmationObject.getObjectId(), "object_id");
         AssertUtils.notBlank(confirmationObject.getObject(), "object");
@@ -48,8 +50,12 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
     public <T> void validate(Class<T> object, String objectId, String type, String code) {
         Date currentDate = new Date();
         ConfirmationObject confirmationObject = getLast(object, objectId, type);
-        AssertUtils.isTrue(confirmationObject != null && confirmationObject.getToken().equals(code), "confirmation.error.invalid", "");
+        AssertUtils.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(code)), "confirmation.error.invalid", "");
         AssertUtils.isTrue(confirmationObject.getExpiredAt().after(currentDate), "confirmation.error.expired", HttpStatus.REQUEST_TIMEOUT);
+    }
+
+    private String convertToMd5(String token) {
+        return DigestUtils.md5DigestAsHex(token.getBytes(StandardCharsets.UTF_8));
     }
 
     private static class ConfirmationMessage extends MessageUtils {
