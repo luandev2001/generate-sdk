@@ -1,10 +1,8 @@
 package com.xuanluan.mc.sdk.generate.utils;
 
-import com.xuanluan.mc.sdk.utils.AssertUtils;
 import com.xuanluan.mc.sdk.utils.StringUtils;
-import org.springframework.util.DigestUtils;
+import org.springframework.util.Assert;
 
-import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
@@ -71,8 +69,8 @@ public class KeyPairUtils {
     }
 
     private static KeyFactory keyFactory(String type) {
-        AssertUtils.notBlank(type, "type");
-        AssertUtils.isTrue(algorithms.contains(type), "Invalid algorithm, " + type + " is not supported");
+        Assert.isTrue(StringUtils.hasText(type), "type");
+        Assert.isTrue(algorithms.contains(type), "Invalid algorithm, " + type + " is not supported");
         try {
             return KeyFactory.getInstance(type);
         } catch (NoSuchAlgorithmException e) {
@@ -81,8 +79,8 @@ public class KeyPairUtils {
     }
 
     public static KeyPair generateKeyPair(String type) {
-        AssertUtils.notBlank(type, "type");
-        AssertUtils.isTrue(algorithms.contains(type), "Invalid algorithm, " + type + " is not supported");
+        Assert.isTrue(StringUtils.hasText(type), "type");
+        Assert.isTrue(algorithms.contains(type), "Invalid algorithm, " + type + " is not supported");
         try {
             return KeyPairGenerator.getInstance(type).generateKeyPair();
         } catch (NoSuchAlgorithmException e) {
