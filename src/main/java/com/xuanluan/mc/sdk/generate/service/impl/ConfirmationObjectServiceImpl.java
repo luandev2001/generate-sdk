@@ -23,7 +23,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public <T> String create(ConfirmationObjectDTO<T> dto, String byUser) {
+    public <T> String create(ConfirmationObjectDTO<T> dto) {
         messageAssert.notNull(dto, "request");
         messageAssert.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
         messageAssert.notBlank(dto.getObjectId(), "object_id");
@@ -32,7 +32,6 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
         String token = GeneratorUtils.generateCodeDigits(dto.getLengthDigit());
         ConfirmationObject confirmationObject = ConfirmationConverter.toConfirmationObject(new ConfirmationObject(), dto);
         confirmationObject.setToken(convertToMd5(token));
-        confirmationObject.setCreatedBy(byUser);
         confirmationObjectRepository.save(confirmationObject);
         return token;
     }
