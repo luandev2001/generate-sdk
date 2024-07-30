@@ -1,7 +1,7 @@
 package com.xuanluan.mc.sdk.generate.service.impl;
 
 import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectRepository;
-import com.xuanluan.mc.sdk.service.locale.MessageAssert;
+import com.xuanluan.mc.sdk.service.i18n.MessageAssert;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
