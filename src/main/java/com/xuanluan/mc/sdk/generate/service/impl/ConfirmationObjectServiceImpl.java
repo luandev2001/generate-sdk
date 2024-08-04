@@ -29,7 +29,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
         messageAssert.notBlank(dto.getObjectId(), "object_id");
         messageAssert.notBlank(dto.getType(), "type");
 
-        String token = GeneratorUtils.generateCodeDigits(dto.getLengthDigit());
+        String token = GeneratorUtils.randomDigits(dto.getLengthDigit());
         ConfirmationObject confirmationObject = ConfirmationConverter.toConfirmationObject(new ConfirmationObject(), dto);
         confirmationObject.setToken(convertToMd5(token));
         confirmationObjectRepository.save(confirmationObject);
