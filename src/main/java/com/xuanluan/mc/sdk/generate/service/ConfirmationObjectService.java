@@ -8,5 +8,5 @@ public interface ConfirmationObjectService {
 
     <T> ConfirmationObject getLast(Class<T> object, String objectId, String type);
 
-    <T> void validate(Class<T> object, String objectId, String type, String code);
+    <T> ConfirmationObject validate(Class<T> object, String objectId, String type, String code);
 }

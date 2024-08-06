@@ -53,11 +53,12 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
     }
 
     @Override
-    public <T> void validate(Class<T> object, String objectId, String type, String code) {
+    public <T> ConfirmationObject validate(Class<T> object, String objectId, String type, String code) {
         Date currentDate = new Date();
         ConfirmationObject confirmationObject = getLast(object, objectId, type);
         messageAssert.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(code)), "confirmation.invalid", "");
         messageAssert.isTrue(confirmationObject.getExpiredAt() != null && confirmationObject.getExpiredAt().after(currentDate), "confirmation.expired");
+        return confirmationObject;
     }
 
     private String convertToMd5(String token) {
