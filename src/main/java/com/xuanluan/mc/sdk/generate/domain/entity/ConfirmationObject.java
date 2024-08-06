@@ -13,7 +13,7 @@ import java.util.Date;
 @Entity
 public class ConfirmationObject extends BaseEntity {
     @Column(nullable = false, updatable = false)
-    private String object;
+    private String objectType;
     @Column(nullable = false, updatable = false)
     private String objectId;
     @Column(nullable = false, updatable = false, length = 50)

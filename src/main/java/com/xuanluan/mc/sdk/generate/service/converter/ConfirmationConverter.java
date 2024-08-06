@@ -9,7 +9,7 @@ import java.util.Date;
 public class ConfirmationConverter {
     public static <T> ConfirmationObject toConfirmationObject(ConfirmationObject object, ConfirmationObjectDTO<T> dto) {
         object.setObjectId(dto.getObjectId());
-        object.setObject(dto.getObject().getSimpleName());
+        object.setObjectType(dto.getObject().getSimpleName());
         object.setExpiredAt(new Date(new Date().getTime() + PeriodTime.convert(dto.getExpiredNum(), dto.getPeriod()) * 1000));
         object.setType(dto.getType());
         return object;

@@ -4,6 +4,8 @@ import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectReposit
 import com.xuanluan.mc.sdk.service.i18n.MessageAssert;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Service;
 import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
 import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
@@ -14,6 +16,7 @@ import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -38,7 +41,15 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
 
     @Override
     public <T> ConfirmationObject getLast(Class<T> object, String objectId, String type) {
-        return confirmationObjectRepository.getLast(object.getSimpleName(), objectId, type);
+        Optional<ConfirmationObject> objectOptional = confirmationObjectRepository.findOne((root, query, criteriaBuilder) -> {
+            query.orderBy(QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, "createdAt"), root, criteriaBuilder));
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("objectType"), object.getSimpleName()),
+                    criteriaBuilder.equal(root.get("objectId"), objectId),
+                    criteriaBuilder.equal(root.get("type"), type)
+            );
+        });
+        return objectOptional.orElse(null);
     }
 
     @Override
