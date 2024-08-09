@@ -16,17 +16,18 @@ import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ConfirmationObjectServiceImpl implements ConfirmationObjectService {
+public class ConfirmationObjectServiceImpl<T> implements ConfirmationObjectService<T> {
     private final ConfirmationObjectRepository confirmationObjectRepository;
     private final MessageAssert messageAssert;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public <T> String create(ConfirmationObjectDTO<T> dto) {
+    public String create(ConfirmationObjectDTO<T> dto) {
         messageAssert.notNull(dto, "request");
         messageAssert.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
         messageAssert.notBlank(dto.getObjectId(), "object_id");
@@ -40,7 +41,7 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
     }
 
     @Override
-    public <T> ConfirmationObject getLast(Class<T> object, String objectId, String type) {
+    public ConfirmationObject getLast(Class<T> object, String objectId, String type) {
         Optional<ConfirmationObject> objectOptional = confirmationObjectRepository.findOne((root, query, criteriaBuilder) -> {
             query.orderBy(QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, "createdAt"), root, criteriaBuilder));
             return criteriaBuilder.and(
@@ -53,12 +54,23 @@ public class ConfirmationObjectServiceImpl implements ConfirmationObjectService 
     }
 
     @Override
-    public <T> ConfirmationObject validate(Class<T> object, String objectId, String type, String code) {
+    public ConfirmationObject validate(Class<T> object, String objectId, String type, String code) {
         Date currentDate = new Date();
         ConfirmationObject confirmationObject = getLast(object, objectId, type);
         messageAssert.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(code)), "confirmation.invalid", "");
         messageAssert.isTrue(confirmationObject.getExpiredAt() != null && confirmationObject.getExpiredAt().after(currentDate), "confirmation.expired");
         return confirmationObject;
+    }
+
+    @Override
+    public void deleteAllExpired(Class<T> object, String objectId, String type) {
+        List<ConfirmationObject> confirmationObjects = confirmationObjectRepository.findAll((root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.equal(root.get("objectType"), object.getSimpleName()),
+                criteriaBuilder.equal(root.get("objectId"), objectId),
+                criteriaBuilder.equal(root.get("type"), type),
+                criteriaBuilder.lessThan(root.get("createdAt"), new Date())
+        ));
+        confirmationObjectRepository.deleteAll(confirmationObjects);
     }
 
     private String convertToMd5(String token) {
