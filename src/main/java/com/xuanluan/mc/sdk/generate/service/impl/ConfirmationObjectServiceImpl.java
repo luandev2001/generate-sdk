@@ -21,13 +21,13 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ConfirmationObjectServiceImpl<T> implements ConfirmationObjectService<T> {
+public class ConfirmationObjectServiceImpl implements ConfirmationObjectService {
     private final ConfirmationObjectRepository confirmationObjectRepository;
     private final MessageAssert messageAssert;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public String create(ConfirmationObjectDTO<T> dto) {
+    public <T> String create(ConfirmationObjectDTO<T> dto) {
         messageAssert.notNull(dto, "request");
         messageAssert.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
         messageAssert.notBlank(dto.getObjectId(), "object_id");
@@ -41,7 +41,7 @@ public class ConfirmationObjectServiceImpl<T> implements ConfirmationObjectServi
     }
 
     @Override
-    public ConfirmationObject getLast(Class<T> object, String objectId, String type) {
+    public <T> ConfirmationObject getLast(Class<T> object, String objectId, String type) {
         Optional<ConfirmationObject> objectOptional = confirmationObjectRepository.findOne((root, query, criteriaBuilder) -> {
             query.orderBy(QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, "createdAt"), root, criteriaBuilder));
             return criteriaBuilder.and(
@@ -54,7 +54,7 @@ public class ConfirmationObjectServiceImpl<T> implements ConfirmationObjectServi
     }
 
     @Override
-    public ConfirmationObject validate(Class<T> object, String objectId, String type, String code) {
+    public <T> ConfirmationObject validate(Class<T> object, String objectId, String type, String code) {
         Date currentDate = new Date();
         ConfirmationObject confirmationObject = getLast(object, objectId, type);
         messageAssert.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(code)), "confirmation.invalid", "");
@@ -63,7 +63,7 @@ public class ConfirmationObjectServiceImpl<T> implements ConfirmationObjectServi
     }
 
     @Override
-    public void deleteAllExpired(Class<T> object, String objectId, String type) {
+    public <T> void deleteAllExpired(Class<T> object, String objectId, String type) {
         List<ConfirmationObject> confirmationObjects = confirmationObjectRepository.findAll((root, query, criteriaBuilder) -> criteriaBuilder.and(
                 criteriaBuilder.equal(root.get("objectType"), object.getSimpleName()),
                 criteriaBuilder.equal(root.get("objectId"), objectId),
