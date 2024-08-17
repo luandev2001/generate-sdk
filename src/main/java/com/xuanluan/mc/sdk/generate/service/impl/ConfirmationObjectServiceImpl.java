@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Service;
 import com.xuanluan.mc.sdk.generate.domain.dto.ConfirmationObjectDTO;
 import com.xuanluan.mc.sdk.generate.domain.entity.ConfirmationObject;
-import com.xuanluan.mc.sdk.generate.service.ConfirmationObjectService;
+import com.xuanluan.mc.sdk.generate.service.IConfirmationObjectService;
 import com.xuanluan.mc.sdk.generate.service.converter.ConfirmationConverter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ConfirmationObjectServiceImpl implements ConfirmationObjectService {
+public class ConfirmationObjectServiceImpl implements IConfirmationObjectService {
     private final ConfirmationObjectRepository confirmationObjectRepository;
     private final MessageAssert messageAssert;
 
