@@ -1,6 +1,6 @@
-package com.xuanluan.mc.sdk.generate.domain.dto;
+package com.xuanluan.mc.sdk.generate.model.dto;
 
-import com.xuanluan.mc.sdk.generate.domain.enums.PeriodTime;
+import com.xuanluan.mc.sdk.generate.model.enums.PeriodTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
