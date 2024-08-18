@@ -1,4 +1,4 @@
-package com.xuanluan.mc.sdk.generate.domain.enums;
+package com.xuanluan.mc.sdk.generate.model.enums;
 
 public enum ConfirmationType {
     VERIFY, LOGIN;

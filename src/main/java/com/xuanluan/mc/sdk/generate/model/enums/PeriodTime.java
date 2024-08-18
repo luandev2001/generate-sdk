@@ -1,17 +1,17 @@
-package com.xuanluan.mc.sdk.generate.domain.enums;
+package com.xuanluan.mc.sdk.generate.model.enums;
 
 public enum PeriodTime {
-    second, minute, hour, day;
+    SECOND, MINUTE, HOUR, DAY;
 
     public static long convert(long time, PeriodTime period) {
         switch (period) {
-            case minute:
+            case MINUTE:
                 time *= 60;
                 break;
-            case hour:
+            case HOUR:
                 time *= 3600;
                 break;
-            case day:
+            case DAY:
                 time *= 3600 * 24;
                 break;
         }
