@@ -68,7 +68,7 @@ public class ConfirmationObjectServiceImpl implements IConfirmationObjectService
                 criteriaBuilder.equal(root.get("objectType"), object.getSimpleName()),
                 criteriaBuilder.equal(root.get("objectId"), objectId),
                 criteriaBuilder.equal(root.get("type"), type),
-                criteriaBuilder.lessThan(root.get("createdAt"), new Date())
+                criteriaBuilder.lessThan(root.get("expiredAt"), new Date())
         ));
         confirmationObjectRepository.deleteAll(confirmationObjects);
     }
