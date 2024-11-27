@@ -1,4 +1,4 @@
-package com.xuanluan.mc.sdk.generate.service.impl;
+package com.xuanluan.mc.sdk.generate.service.imp;
 
 import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectRepository;
 import com.xuanluan.mc.sdk.service.i18n.MessageAssert;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ConfirmationObjectServiceImpl implements IConfirmationObjectService {
+public class ConfirmationObjectServiceImp implements IConfirmationObjectService {
     private final ConfirmationObjectRepository confirmationObjectRepository;
     private final MessageAssert messageAssert;
 
