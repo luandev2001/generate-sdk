@@ -1,5 +1,7 @@
 package com.xuanluan.mc.sdk.generate.service.imp;
 
+import com.xuanluan.mc.sdk.generate.model.request.confirmation_object.CreateConfirmationObject;
+import com.xuanluan.mc.sdk.generate.model.request.confirmation_object.ValidateConfirmationObject;
 import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectRepository;
 import com.xuanluan.mc.sdk.service.i18n.MessageAssert;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
@@ -27,7 +29,7 @@ public class ConfirmationObjectServiceImp implements IConfirmationObjectService 
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public <T> String create(ConfirmationObjectDTO<T> dto) {
+    public <T> String create(CreateConfirmationObject<T> dto) {
         messageAssert.notNull(dto, "request");
         messageAssert.isTrue(dto.getExpiredNum() > 0, "expiredNum > 0");
         messageAssert.notBlank(dto.getObjectId(), "object_id");
@@ -41,33 +43,33 @@ public class ConfirmationObjectServiceImp implements IConfirmationObjectService 
     }
 
     @Override
-    public <T> ConfirmationObject getLast(Class<T> object, String objectId, String type) {
+    public <T> ConfirmationObject getLast(ConfirmationObjectDTO<T> request) {
         Optional<ConfirmationObject> objectOptional = confirmationObjectRepository.findOne((root, query, criteriaBuilder) -> {
             query.orderBy(QueryUtils.toOrders(Sort.by(Sort.Direction.DESC, "createdAt"), root, criteriaBuilder));
             return criteriaBuilder.and(
-                    criteriaBuilder.equal(root.get("objectType"), object.getSimpleName()),
-                    criteriaBuilder.equal(root.get("objectId"), objectId),
-                    criteriaBuilder.equal(root.get("type"), type)
+                    criteriaBuilder.equal(root.get("objectType"), request.getObject().getSimpleName()),
+                    criteriaBuilder.equal(root.get("objectId"), request.getObjectId()),
+                    criteriaBuilder.equal(root.get("type"), request.getType())
             );
         });
         return objectOptional.orElse(null);
     }
 
     @Override
-    public <T> ConfirmationObject validate(Class<T> object, String objectId, String type, String code) {
+    public <T> ConfirmationObject validate(ValidateConfirmationObject<T> request) {
         Date currentDate = new Date();
-        ConfirmationObject confirmationObject = getLast(object, objectId, type);
-        messageAssert.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(code)), "confirmation.invalid", "");
+        ConfirmationObject confirmationObject = getLast(request);
+        messageAssert.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(request.getCode())), "confirmation.invalid", "");
         messageAssert.isTrue(confirmationObject.getExpiredAt() != null && confirmationObject.getExpiredAt().after(currentDate), "confirmation.expired");
         return confirmationObject;
     }
 
     @Override
-    public <T> void deleteAllExpired(Class<T> object, String objectId, String type) {
+    public <T> void deleteAllExpired(ConfirmationObjectDTO<T> request) {
         List<ConfirmationObject> confirmationObjects = confirmationObjectRepository.findAll((root, query, criteriaBuilder) -> criteriaBuilder.and(
-                criteriaBuilder.equal(root.get("objectType"), object.getSimpleName()),
-                criteriaBuilder.equal(root.get("objectId"), objectId),
-                criteriaBuilder.equal(root.get("type"), type),
+                criteriaBuilder.equal(root.get("objectType"), request.getObject().getSimpleName()),
+                criteriaBuilder.equal(root.get("objectId"), request.getObjectId()),
+                criteriaBuilder.equal(root.get("type"), request.getType()),
                 criteriaBuilder.lessThan(root.get("expiredAt"), new Date())
         ));
         confirmationObjectRepository.deleteAll(confirmationObjects);
