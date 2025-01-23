@@ -16,10 +16,10 @@ public class ConfirmationObject extends BaseEntity {
     private String objectType;
     @Column(nullable = false, updatable = false)
     private String objectId;
-    @Column(nullable = false, updatable = false, length = 50)
+    @Column(nullable = false, updatable = false)
     private String token;
     @Column(nullable = false, updatable = false)
     private Date expiredAt;
-    @Column(nullable = false, updatable = false, length = 20)
+    @Column(nullable = false, updatable = false)
     private String type;
 }
