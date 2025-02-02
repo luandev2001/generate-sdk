@@ -6,6 +6,7 @@ import com.xuanluan.mc.sdk.generate.repository.confirm.ConfirmationObjectReposit
 import com.xuanluan.mc.sdk.service.i18n.MessageAssert;
 import com.xuanluan.mc.sdk.utils.GeneratorUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@ConditionalOnProperty(name = "sdk.confirmation_object.enabled", havingValue = "true")
 public class ConfirmationObjectServiceImp implements IConfirmationObjectService {
     private final ConfirmationObjectRepository confirmationObjectRepository;
     private final MessageAssert messageAssert;
