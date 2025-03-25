@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.util.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class ConfirmationObject extends BaseEntity {
     @Column(nullable = false, updatable = false)
     private String token;
     @Column(nullable = false, updatable = false)
-    private Date expiredAt;
+    private Instant expiredAt;
     @Column(nullable = false, updatable = false)
     private String type;
 }

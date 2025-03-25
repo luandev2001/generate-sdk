@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -59,10 +60,10 @@ public class ConfirmationObjectServiceImp implements IConfirmationObjectService 
 
     @Override
     public <T> ConfirmationObject validate(ValidateConfirmationObject<T> request) {
-        Date currentDate = new Date();
+        Instant currentDate = Instant.now();
         ConfirmationObject confirmationObject = getLast(request);
         messageAssert.isTrue(confirmationObject != null && confirmationObject.getToken().equals(convertToMd5(request.getCode())), "confirmation.invalid", "");
-        messageAssert.isTrue(confirmationObject.getExpiredAt() != null && confirmationObject.getExpiredAt().after(currentDate), "confirmation.expired");
+        messageAssert.isTrue(confirmationObject.getExpiredAt() != null && confirmationObject.getExpiredAt().isAfter(currentDate), "confirmation.expired");
         return confirmationObject;
     }
 
