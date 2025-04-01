@@ -7,11 +7,12 @@ import lombok.Setter;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
 @Entity
-public class ConfirmationObject extends BaseEntity {
+public class ConfirmationObject extends BaseEntity<UUID> {
     @Column(nullable = false, updatable = false)
     private String objectType;
     @Column(nullable = false, updatable = false)
